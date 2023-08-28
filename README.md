@@ -39,12 +39,12 @@ Summary the usual behavior after the power has sent to module:
 | 0x10 | 0x03 | x1 |
 | 0x05 | 0x1a | x2 |
 | 0x0e | 0x2f | x4 |
-| 0x2c | 0x2f | every 300ms |
+| 0x2c | 0x2f, 0x31 | every 300ms |
 
 Probably, the exchange of 0x0e -> 0x2f belongs to module wifi connection and/or wifi signal strength. It needs to test and research.
 
 Anyway, there is no need to get any answer from AC to initiate the power ON or mode change. Just send 0x2C packet with all necessary bytes set.
-Also I found out that there is no need to send/receive 0x2c/0x2f packets every 300ms. My DIY ESP8266 module works well with 10 seconds interval. However the interval should be optimized to catch changes that was made from IR remote (or indoor unit power button) concurrently.
+Also I found out that there is no need to send/receive 0x2c/0x2f,0x31 packets every 300ms. My DIY ESP8266 module works well with 10 seconds interval. However the interval should be optimized to catch changes that was made from IR remote (or indoor unit power button, wired controller) concurrently.
 
 <span id="packets_description"/>
 ## OUTGOING PACKETS
@@ -104,8 +104,8 @@ Content status: unknown
 
 Example: 03 32 00 35
 
-### 0х2F (incoming)
-Description: Main incoming packet. Contains current AC information.
+### 0х2f, 0x31 (incoming)
+Description: Main incoming packet. Contains current AC information. The length may depends on various AC units but for current experience byte positions stay the same.
 
 Frequency: only as the answer to 0x2c which has been sent every by module.
 
@@ -120,7 +120,7 @@ Content status: unknown
 
 
 
-The following is a detailed description of the packets 0x2C & 0x2F.
+The following is a detailed description of the packets 0x2c & 0x2f,0x31.
 
 
 <span id="packet_type_0x2c"/>
@@ -302,17 +302,18 @@ control digit (sum of all packet bytes w/o two header bytes % 256)
 
 ---
 --------------------------------------------------------------------------------------------------------------------------------------------
-### 0x2F PACKET
-Response packet from AC to 0x2F packet from module.
+### 0x2f,0x31 PACKET
+Response packet from AC to 0x2c packet from module.
 
 ##### Byte 0-1 (HEADER)
 VALUES: 0x7E 0x7E
 
 ##### Byte 2 (LENGTH)
-VALUES: 0x2F
+VALUES: 0x2F, 0x31
+depends on AC unit
 
-##### Byte 3 (?)
-VALUES: 0x31 (usual packet), 0x33 (fully unknown packet )
+##### Byte 3 (TYPE OF PACKET?)
+VALUES: 0x31 (usual packet, following description in this section), 0x33 (fully unknown packet)
 
 but sometimes 0x33. examples:
 
