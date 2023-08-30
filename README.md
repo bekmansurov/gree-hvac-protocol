@@ -322,8 +322,9 @@ VALUES: 0x31 (usual packet, following description in this section), 0x33 (fully 
 
 | AC | BYTE |
 | --- | --- |
-| Kentatsu KSGU, Lessar | 0x31 |
-| unknown | 0x01 |
+| Kentatsu KSGU, Lessar, unknown (on state) | 0x31 |
+| unknown | 0x01 (off state) |
+| unknown (on state) | 0x30 |
 
 Sometimes 0x33 with some unknown format/content. Examples:
 
@@ -331,18 +332,25 @@ Sometimes 0x33 with some unknown format/content. Examples:
 
 2F 33 04 00 40 00 08 20 19 0A 00 10 00 14 14 5B 04 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 98
 
-##### BYTE 4 (POWER STATE)
+##### BYTE 4 (POWER STATE?)
 
 | AC | BYTE |
 | --- | --- |
 | 0x00 | OFF |
 | 0x04 | ON |
 
+0x00 unknown AC, ON state
+
 ##### BYTE 5 (?)
 VALUES: 0x00
 
 ##### BYTE 6 (?)
-VALUES: 0x00 0x40
+
+| AC | BYTE |
+| --- | --- |
+| 0x00 | OFF |
+| 0x40 | ON |
+
 on/off status?
 
 ##### BYTE 7 (?)
@@ -494,7 +502,7 @@ always 0x00
 0x00 always
 
 ##### BYTE 22
-0x00, 0x08 (unknown AC, off state)
+0x00, 0x08 (unknown AC, on and off state)
 
 ##### BYTES 23-27
 0x00 always
