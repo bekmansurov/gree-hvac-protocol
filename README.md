@@ -306,52 +306,55 @@ control digit (sum of all packet bytes w/o two header bytes % 256)
 
 Response packet from AC to 0x2C packet from module.
 
-##### Byte 0-1 (HEADER)
+##### BYTE 0-1 (HEADER)
 VALUES: 0x7E 0x7E
 
-##### Byte 2 (LENGTH)
-VALUES: 0x2F, 0x31
+##### BYTE 2 (LENGTH)
+| AC | BYTE |
+| --- | --- |
+| Kentatsu KSGU, unknown | 0x2F |
+| Lessar | 0x31 |
+
 depends on AC unit
 
-##### Byte 3 (TYPE OF PACKET?)
+##### BYTE 3 (TYPE OF PACKET?)
 VALUES: 0x31 (usual packet, following description in this section), 0x33 (fully unknown packet)
 
-but sometimes 0x33. examples:
+| AC | BYTE |
+| --- | --- |
+| Kentatsu KSGU, Lessar | 0x31 |
+| unknown | 0x01 |
+
+Sometimes 0x33 with some unknown format/content. Examples:
 
 2F 33 00 00 40 00 08 20 19 0A 00 10 00 14 14 5B 04 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 94
 
 2F 33 04 00 40 00 08 20 19 0A 00 10 00 14 14 5B 04 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 98
 
+##### BYTE 4 (POWER STATE)
 
-##### Byte 4 (POWER STATE)
-VALUES: 0x00 - off, 0x04 - on
+| AC | BYTE |
+| --- | --- |
+| 0x00 | OFF |
+| 0x04 | ON |
 
-##### Byte 5 (?)
+##### BYTE 5 (?)
 VALUES: 0x00
 
-##### Byte 6 (?)
-VALUES: 0x40
-
+##### BYTE 6 (?)
+VALUES: 0x00 0x40
 on/off status?
 
-##### Byte 7 (?)
+##### BYTE 7 (?)
 VALUES: 0x00
 
-##### Byte 8 (MODE + FAN)
+##### BYTE 8 (MODE + FAN)
 current state of AC fan? analog to 0x2c packet? see description there
 
 also unknown values:
+0x01, 0x11, 0x12, 0x98
 
-0x01 - ?
-
-0x11 - ? 
-
-0x12 - ?
-
-0x98 - ?
-
-
-##### Byte 9 (TEMPERATURE)
+##### BYTE 9 (TEMPERATURE)
 current state of set temperature, analog to the same byte in 0x2c packet.
 
 from 0x00 (16c) to 0xE0 (30c)
@@ -360,25 +363,9 @@ from 0x00 (16c) to 0xE0 (30c)
 
 there were also some unknown exceptions:
 
-0x88 - ?
+0x88, 0x89, 0x98, 0x99, 0xA8, 0xA9, 0xAA, 0xAC, 0xAD
 
-0x89 - ?
-
-0x98 - ?
-
-0x99 - ?
-
-0xA8 - ?
-
-0xA9 - ?
-
-0xAA - ?
-
-0xAC - ?
-
-0xAD - ?
-
-##### Byte 10 (DISPLAY + TURBO?)
+##### BYTE 10 (DISPLAY + TURBO?)
 current state of AC temperature? analog to 0x2c packet?
 
 0x00 - AC display off
@@ -399,10 +386,10 @@ current state of AC temperature? analog to 0x2c packet?
 
 (according to manual TURBO works only with COOL or HEAT modes as well as SE mode; SE (save energy) mode not discovered yet)
 
-##### Byte 11 (?)
+##### BYTE 11 (?)
 always 0x02
 
-##### Byte 12 (SWING)
+##### BYTE 12 (SWING)
 swing status of AC? analog to 0x2c packet? (without 0x80, 0xA0)
 
 0x00 - no swing on screen
@@ -427,7 +414,7 @@ swing status of AC? analog to 0x2c packet? (without 0x80, 0xA0)
 
 0xb0 - 123 - middle to top
 
-##### Byte 13 (DISPLAY OF TEMP)
+##### BYTE 13 (DISPLAY OF TEMP)
 0x00 - (no house icon on remote)
 
 0x10 - current temp set (empty house icon on remote)
@@ -503,7 +490,13 @@ always 0x00
 
 08 52 10 - ?
 
-##### Bytes 20-27 (?)
+##### BYTES 20-21 (?)
+0x00 always
+
+##### BYTE 22
+0x00, 0x08 (unknown AC, off state)
+
+##### BYTES 23-27
 0x00 always
 
 ##### Byte 28 (???)
@@ -524,25 +517,34 @@ looks like temperature in Celsius
 ##### Bytes 29-40 (?)
 0x00 always
 
-##### Byte 41 (?)
+##### BYTE 41 (?)
 0x00
 
 0x80 (changing when AC ON from 0x00 to 0x80 and back several times) may be when something received from IR remote?
 
-##### Bytes 42-45 (?)
+##### BYTE 42 (?)
 0x00 always
 
-##### Byte 46 (INDOOR TEMPERATURE)
+##### BYTE 43 (?)
+0x00, 0x02 (unknown AC, off state)
+
+##### BYTE 44 (?)
+0x00, 0x02 (unknown AC, off state)
+
+##### BYTE 45 (?)
+0x00 always
+
+##### BYTE 46 (INDOOR TEMPERATURE)
 0x3E - 16 =  indoor temp 22c OR 0x3E -> 62 - 40 = 22c
 
 possible values: 0x3e, 0x41, 0x42, 0x43, 0x44, 0x45
 
 changed to quite different temp when in I FEEL mode, looks like it changes to IR temperature sensor
 
-##### Bytes 47-48 (?)
+##### BYTES 47-48 (?)
 always 0x00
 
-##### Last byte 49,51 (CRC)
+##### LAST BYTE 49,51 (CRC)
 control digit (sum of all packet bytes w/o two header bytes % 256)
 
 
