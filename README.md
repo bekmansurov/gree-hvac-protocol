@@ -9,8 +9,8 @@ Any corrections and improvements are welcome.
 There are several types of original GREE WiFi modules such as CS532AE, CS532AH, CS532AX and other. As I understand one of the difference between them is the length of cord.
 I used CS532AX for researching from AliExpress.
 
-<span id="uart_parameters"/>
 ## UART PARAMETERS
+
 4800 8E1 5V
 
 Original module according to my router log connects to (using GREE+ or EWPE Smart apps):
@@ -20,7 +20,6 @@ Original module according to my router log connects to (using GREE+ or EWPE Smar
 - 100.116.20.150:1027
 More likely it depentds on country select in the app.
 
-<span id="packet_structure"/>
 ## PACKET STRUCTURE
 
 Every message that sent by UART includes:
@@ -30,23 +29,25 @@ Every message that sent by UART includes:
 4. **check digit** ((packet length + data packet) % 256): 1 byte.
 
 ## TYPES OF PACKETS
+
 Usually packets have different length byte so it's convenient to use this byte as a packet identifier.
 Further, "outgoing packet" is the packet originally from Wi-Fi module, "incoming packet" is the packet (answer) from AC.
 
 Summary the usual behavior after the power has sent to module:
 
 | OUTGOING | INCOMING | REPEAT |
+| ----------- | ----------- | ----------- |
 | 0x10 | 0x03 | x1 |
 | 0x05 | 0x1a | x2 |
 | 0x0e | 0x2f | x4 |
 | 0x2c | 0x2f, 0x31 | every 300ms |
+
 
 Probably, the exchange of 0x0e -> 0x2f belongs to module wifi connection and/or wifi signal strength. It needs to test and research.
 
 Anyway, there is no need to get any answer from AC to initiate the power ON or mode change. Just send 0x2C packet with all necessary bytes set.
 Also I found out that there is no need to send/receive 0x2c/0x2f,0x31 packets every 300ms. My DIY ESP8266 module works well with 10 seconds interval. However the interval should be optimized to catch changes that was made from IR remote (or indoor unit power button, wired controller) concurrently.
 
-<span id="packets_description"/>
 ## OUTGOING PACKETS
 
 ### 0x10 (outgoing)
@@ -123,9 +124,8 @@ Content status: unknown
 The following is a detailed description of the packets 0x2c & 0x2f,0x31.
 
 
-<span id="packet_type_0x2c"/>
 ### 0x2C PACKET
----
+
 Packets of this type are sent to AC by Wi-Fi module.
 
 ##### Byte 0, 1 (HEADER)
@@ -300,10 +300,11 @@ always 0x00
 ##### Byte 46 (CRC)
 control digit (sum of all packet bytes w/o two header bytes % 256)
 
----
 --------------------------------------------------------------------------------------------------------------------------------------------
-### 0x2f,0x31 PACKET
-Response packet from AC to 0x2c packet from module.
+
+### 0x2F,0x31 PACKET
+
+Response packet from AC to 0x2C packet from module.
 
 ##### Byte 0-1 (HEADER)
 VALUES: 0x7E 0x7E
@@ -541,7 +542,7 @@ changed to quite different temp when in I FEEL mode, looks like it changes to IR
 ##### Bytes 47-48 (?)
 always 0x00
 
-##### Byte 49 (CRC)
+##### Last byte 49,51 (CRC)
 control digit (sum of all packet bytes w/o two header bytes % 256)
 
 
